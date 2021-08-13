@@ -30,7 +30,11 @@ func StrByLines(arr [][8]string, length int) {
 		for index2 := 0; index2 < length; index2++ {
 			for _, val := range arr[index2][index1] {
 				if val != '\n' && index2 != length-1 {
-					str = str + string(val)
+					if index2 == 2 {
+						str = str + ("\033[31m" + string(val) + "\033[0m")
+					} else {
+						str = str + string(val)
+					}
 				} else if index2 == length-1 {
 					str = str + string(val)
 				}
@@ -42,7 +46,7 @@ func StrByLines(arr [][8]string, length int) {
 
 func Ascii(number int, str []string, index int) string {
 	start := number*9 + 2 + index - 1
-	nothing := "Some Problems Here"
+	nothing := ""
 	for index, val := range str {
 		if index == start {
 			return val

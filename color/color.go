@@ -22,7 +22,6 @@ var counter int
 var color string
 
 func StrColor(text, str string) {
-
 	switch color := str; color {
 	case "red":
 		fmt.Println(string(colorRed), text, string(colorReset))
@@ -82,36 +81,26 @@ func ReadFiles(str []string) []string {
 }
 
 func CheckIndex(str string, index int, soz int) bool {
-	// fmt.Println(str, len(str))
-	if str[:8] == "--index[" {
-
+	if len(str) > 7 && str[:8] == "--index[" && str[len(str)-1:len(str)] == "]" {
 		array := strings.Split(str[8:len(str)-1], ":")
-		// fmt.Println(array[0], array[1])
 		if len(array) == 2 {
-			var num1, num2 int
-			var val1, val2 error
+			num1, val1 := strconv.Atoi(array[0])
+			if val1 != nil && array[0] != "" {
+				fmt.Printf("Not valid index: \"%s\"\n", array[0])
+				os.Exit(0)
+			}
+			num2, val2 := strconv.Atoi(array[1])
+			if val2 != nil && array[1] != "" {
+				fmt.Printf("Not valid index: \"%s\"\n", array[1])
+				os.Exit(0)
+			}
 			if array[0] == "" && array[1] == "" {
-				// fmt.Println("I m here")
 				num1 = 0
 				num2 = soz
 			} else if array[1] == "" {
-				num1, val1 = strconv.Atoi(array[0])
-				if val1 != nil {
-					return false
-				}
 				num2 = soz
 			} else if array[0] == "" {
 				num1 = 0
-				num2, val2 = strconv.Atoi(array[1])
-				if val1 != nil {
-					return false
-				}
-			} else {
-				num1, val1 = strconv.Atoi(array[0])
-				num2, val2 = strconv.Atoi(array[1])
-				if val1 != nil || val2 != nil {
-					return false
-				}
 			}
 			if index >= num1 && index <= num2 {
 				return true
@@ -125,13 +114,16 @@ func CheckIndex(str string, index int, soz int) bool {
 				return true
 			}
 		}
+	} else {
+		fmt.Printf("Wrong input: %s\nExpected:\"--index[position1:position2]\" or \"--index[position]\" or \"<specified character/letter>\"\n", str)
+		os.Exit(0)
 	}
 	return false
 }
 
 func CheckLetter(argument []string, letter string, letter_index int, soz int) bool {
 	for index := 0; index < len(argument); index++ {
-		if len(argument[index]) != 1 && CheckIndex(argument[index], letter_index, soz) {
+		if len(argument[index]) > 1 && CheckIndex(argument[index], letter_index, soz) {
 			return true
 		}
 		if len(argument[index]) == 1 {
@@ -174,8 +166,11 @@ func StrByLines(arr [][8]string, length int, color string, argumets []string, wo
 }
 
 func CheckSecondArg(str string) string {
-	if str[0:8] == "--color=" {
+	if len(str) > 8 && str[0:8] == "--color=" {
 		return str[8:]
+	} else {
+		fmt.Printf("Wrong input for color: \"%s\"\nExpected: \"--color=<color>\"\n", str)
+		os.Exit(0)
 	}
 	return str
 }
@@ -193,11 +188,18 @@ func Ascii(number int, str []string, index int) string {
 
 func main() {
 	arguments := os.Args[1:]
-	if len(arguments) < 2 {
+	if len(arguments) == 1 {
+		if arguments[0] == "--help" {
+			fmt.Println("To enter argument: \"go run . <argument> --color=<color>\"\nTo specify a single to be colored:\"go run . <argument> --color=<color> --index[position]\"\nTo specify a set of letters to be colored:\"go run . <argument> --color=<color> --index[position1] --index[position2]\" or \"go run . <argument> --color=<color>  \"specified character or letter\"\"\nTo specify a particular part of the string to be colored:\"go run . <argument> --color=<color> --index[position1:position2]\"")
+			return
+		} else {
+			fmt.Println("Please enter argument with a specified color!")
+			return
+		}
+	} else if len(arguments) == 0 {
 		return
 	}
 	color = color + CheckSecondArg(arguments[1])
-
 	sozder := strings.Split(arguments[0], "\\n")
 	for index := 0; index < len(sozder); index++ {
 		var standard []string
