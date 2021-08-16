@@ -190,7 +190,7 @@ func main() {
 	arguments := os.Args[1:]
 	if len(arguments) == 1 {
 		if arguments[0] == "--help" {
-			fmt.Println("To enter argument: \"go run . <argument> --color=<color>\"\nTo specify a single to be colored:\"go run . <argument> --color=<color> --index[position]\"\nTo specify a set of letters to be colored:\"go run . <argument> --color=<color> --index[position1] --index[position2]\" or \"go run . <argument> --color=<color>  \"specified character or letter\"\"\nTo specify a particular part of the string to be colored:\"go run . <argument> --color=<color> --index[position1:position2]\"")
+			fmt.Println("1.To enter argument: \"go run . <argument> --color=<\033[35mcolor\033[0m>\"\n2.To specify a single to be colored:\"go run . <argument> --color=<\033[34mcolor\033[0m> --index[position]\"\n3.To specify a set of letters to be colored:\"go run . <argument> --color=<\033[32mcolor\033[0m> --index[position1] --index[position2]\" or \"go run . <argument> --color=<\033[36mcolor\033[0m>  \"specified character or letter\"\"\n4.To specify a particular part of the string to be colored:\"go run . <argument> --color=<\033[33mcolor\033[0m> --index[position1:position2]\"")
 			return
 		} else {
 			fmt.Println("Please enter argument with a specified color!")
